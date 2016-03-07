@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class WorldRenderer {
     Box2DDebugRenderer renderer = new Box2DDebugRenderer();
-    public static float CAMERA_WIDTH = 10.0F;
+    public static float CAMERA_WIDTH = 5.0F;
     public static float CAMERA_HEIGHT = 15.0F;
     public float ppuX;
     public float ppuY;
