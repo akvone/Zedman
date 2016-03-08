@@ -4,12 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.utils.Array;
 import com.kivi.zedman.controller.ZContactListener;
 
 /**
@@ -20,11 +18,13 @@ import com.kivi.zedman.controller.ZContactListener;
 public class ZWorld {
     World world;
 
-    public int width = 100;
+    public int width = 50;
     public int height = 20;
 
+    float pixelSize = 0.5f;
+
     public ZWorld() {
-        world = new World(new Vector2(0, -10), true);  //Arguments: gravity vector, and object's sleep boolean
+        world = new World(new Vector2(0, -1), true);  //Arguments: gravity vector, and object's sleep boolean
         this.world.setContactListener(new ZContactListener(this.world));
         this.createWorld();
     }
@@ -38,10 +38,10 @@ public class ZWorld {
         stickman.setFixedRotation(true);
 
         for(int i = 0; i < this.width; i++) {
-            Body boxGround = createBox(0.5f, 0.5f, 0);
-            boxGround.setTransform(i, 0, 0); //
+            Body boxGround = createBox(pixelSize, pixelSize, 0);
+            boxGround.setTransform(i, 0, 0);
             boxGround.getFixtureList().get(0).setUserData("Ground");
-            boxGround = createBox(0.5f, 0.5f, 0);
+            boxGround = createBox(pixelSize, pixelSize, 0);
             boxGround.setTransform(i, height - 1, 0);
             boxGround.getFixtureList().get(0).setUserData("Ceiling");
         }

@@ -3,6 +3,7 @@ package com.kivi.zedman.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.kivi.zedman.controller.CameraController;
 import com.kivi.zedman.view.WorldRenderer;
 import com.kivi.zedman.ZWorld;
 import com.kivi.zedman.view.OnscreenControlRenderer;
@@ -13,6 +14,7 @@ public class GameScreen extends ZedmanScreen {
 	ScreenLogger screenLogger;
 	OnscreenControlRenderer controlRenderer;
 	WorldRenderer worldRenderer;
+	CameraController cameraController;
 
 	ZWorld zworld;
 
@@ -26,6 +28,7 @@ public class GameScreen extends ZedmanScreen {
 		screenLogger = new ScreenLogger();
 		controlRenderer = new OnscreenControlRenderer();
 		worldRenderer = new WorldRenderer(zworld, true);
+		cameraController = new CameraController(worldRenderer.cam);
 
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f); //Set clear color as black
 	}
@@ -33,6 +36,8 @@ public class GameScreen extends ZedmanScreen {
 	@Override
 	public void render (float delta) {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //And clear the screen with this color
+
+		cameraController.update(delta);
 
 		screenLogger.render();
 		controlRenderer.render();

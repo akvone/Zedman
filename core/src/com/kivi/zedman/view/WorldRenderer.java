@@ -28,7 +28,6 @@ public class WorldRenderer {
     private SpriteBatch spriteBatch;
     Texture texture;
     public Map<String, TextureRegion> textureRegions;
-    BitmapFont font = new BitmapFont();
     Array<Body> bodies;
 
     public WorldRenderer(ZWorld zWorld, boolean debug) {
