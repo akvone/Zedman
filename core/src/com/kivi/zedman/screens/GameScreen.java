@@ -25,12 +25,13 @@ public class GameScreen extends ZedmanScreen {
 		zworld = new ZWorld();
 		screenLogger = new ScreenLogger();
 		controlRenderer = new OnscreenControlRenderer();
-		worldRenderer = new WorldRenderer(zworld, ZWorld.CAMERA_WIDTH, ZWorld.CAMERA_HEIGHT, true);
+		worldRenderer = new WorldRenderer(zworld, true);
+
+		Gdx.gl.glClearColor(0f, 0f, 0f, 0f); //Set clear color as black
 	}
 
 	@Override
 	public void render (float delta) {
-		Gdx.gl.glClearColor(0f, 0f, 0f, 0f); //Set clear color as black
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //And clear the screen with this color
 
 		screenLogger.render();
@@ -44,9 +45,9 @@ public class GameScreen extends ZedmanScreen {
 
 	@Override
 	public void hide () {
-		Gdx.app.debug("Zedman", "dispose game screen");
-		screenLogger.dispose();
-		controlRenderer.dispose();
+			Gdx.app.debug("Zedman", "dispose game screen");
+			screenLogger.dispose();
+			controlRenderer.dispose();
 		worldRenderer.dispose();
 	}
 }

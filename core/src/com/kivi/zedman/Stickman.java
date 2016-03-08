@@ -3,7 +3,7 @@ package com.kivi.zedman;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
-public class Player {
+public class Stickman {
 
     public enum State {
         NONE, WALKING, DEAD
@@ -22,7 +22,7 @@ public class Player {
     State		state = State.NONE;
     boolean		facingLeft = true;
 
-    public Player(Vector2 position) {
+    public Stickman(Vector2 position) {
 
         this.position = position;
         this.bounds.height = SIZE;
