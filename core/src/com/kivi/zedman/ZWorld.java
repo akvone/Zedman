@@ -1,14 +1,16 @@
 package com.kivi.zedman;
 
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Array;
 import com.kivi.zedman.controller.ZContactListener;
+import com.kivi.zedman.utils.MapUtils;
 
 /**
  * Created by Kirill on 06.03.2016.
@@ -16,15 +18,26 @@ import com.kivi.zedman.controller.ZContactListener;
 
 
 public class ZWorld {
-    World world;
+    World world = new World(new Vector2(0.0F, -20.0F), true);
+    public static float CAMERA_WIDTH = 12.0F;
+    public static float CAMERA_HEIGHT = 8.0F;
+    public int width = 30;
+    public int height = 8;
 
-    public int width = 50;
-    public int height = 20;
+    public OrthogonalTiledMapRenderer getTiledMapRenderer() {
+        return tiledMapRenderer;
+    }
 
-    float pixelSize = 0.5f;
+    private OrthogonalTiledMapRenderer tiledMapRenderer;
+
+    public void update(float delta) {
+    }
+
+    public World getWorld() {
+        return this.world;
+    }
 
     public ZWorld() {
-        world = new World(new Vector2(0, -1), true);  //Arguments: gravity vector, and object's sleep boolean
         this.world.setContactListener(new ZContactListener(this.world));
         this.createWorld();
     }
@@ -33,54 +46,33 @@ public class ZWorld {
     }
 
     private void createWorld() {
-        Body stickman = createStickman();
-        stickman.setTransform(1, 4, 0);
-        stickman.setFixedRotation(true);
-
-        for(int i = 0; i < this.width; i++) {
-            Body boxGround = createBox(pixelSize, pixelSize, 0);
-            boxGround.setTransform(i, 0, 0);
-            boxGround.getFixtureList().get(0).setUserData("Ground");
-            boxGround = createBox(pixelSize, pixelSize, 0);
-            boxGround.setTransform(i, height - 1, 0);
-            boxGround.getFixtureList().get(0).setUserData("Ceiling");
-        }
-
-    }
-
-    private Body createBox(float width, float height, float density) {
         BodyDef def = new BodyDef();
-        def.type = BodyType.StaticBody;
-        Body box = world.createBody(def);
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width, height);
-        box.createFixture(shape, density);
-        shape.dispose();
+        def.type = BodyDef.BodyType.DynamicBody;
+        Body boxP = this.world.createBody(def);
+
+        MapUtils mapUtils = new MapUtils("Maps/test.tmx", world);
+        tiledMapRenderer = mapUtils.getTiledMapRenderer();
+
+//        for(int i = 0; i < this.width; ++i) {
+//            Body boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 2.0F);
+//            boxGround.setTransform((float)i, 0.0F, 0.0F);
+//            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("bd");
+//            boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 0.0F);
+//            boxGround.setTransform((float)i, (float)(this.height - 1), 0.0F);
+//            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("b");
+//        }
+
+    }
+
+    private Body createBox(BodyType type, float width, float height, float density) {
+        BodyDef def = new BodyDef();
+        def.type = type;
+        Body box = this.world.createBody(def);
+        PolygonShape poly = new PolygonShape();
+        poly.setAsBox(width, height);
+        box.createFixture(poly, density);
+        poly.dispose();
         return box;
-    }
-
-    private Body createStickman(){
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.DynamicBody;
-        Body stickman = world.createBody(bodyDef);
-        CircleShape circle = new CircleShape();
-        circle.setRadius(1);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
-        stickman.createFixture(fixtureDef);
-        circle.dispose();
-        return stickman;
-    }
-
-
-    public void update(float delta) {
-    }
-
-    public World getWorld() {
-        return this.world;
     }
 
     public void dispose() {
