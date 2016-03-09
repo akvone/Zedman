@@ -23,6 +23,15 @@ public class ZWorld {
     public static float CAMERA_HEIGHT = 8.0F;
     public int width = 30;
     public int height = 8;
+    Body player;
+
+    public void setPlayer(Body player) {
+        this.player = player;
+    }
+
+    public Body getPlayer() {
+        return player;
+    }
 
     public OrthogonalTiledMapRenderer getTiledMapRenderer() {
         return tiledMapRenderer;
