@@ -10,6 +10,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kivi.zedman.controller.ZContactListener;
 
+import java.util.Random;
+
 /**
  * Created by Kirill on 06.03.2016.
  */
@@ -23,20 +25,18 @@ public class ZWorld {
 
     float pixelSize = 0.5f;
 
+    public long timePastLastCreate = 0;
+
     public ZWorld() {
-        world = new World(new Vector2(0, -1), true);  //Arguments: gravity vector, and object's sleep boolean
-        this.world.setContactListener(new ZContactListener(this.world));
-        this.createWorld();
+        world = new World(new Vector2(0, -10), true);  //Arguments: gravity vector, and object's sleep boolean
+        world.setContactListener(new ZContactListener(this.world));
+        createWorld();
     }
 
     public void setPP(float x, float y) {
     }
 
     private void createWorld() {
-        Body stickman = createStickman();
-        stickman.setTransform(1, 4, 0);
-        stickman.setFixedRotation(true);
-
         for(int i = 0; i < this.width; i++) {
             Body boxGround = createBox(pixelSize, pixelSize, 0);
             boxGround.setTransform(i, 0, 0);
@@ -45,7 +45,6 @@ public class ZWorld {
             boxGround.setTransform(i, height - 1, 0);
             boxGround.getFixtureList().get(0).setUserData("Ceiling");
         }
-
     }
 
     private Body createBox(float width, float height, float density) {
@@ -68,8 +67,8 @@ public class ZWorld {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
         fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f;
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 1f;
         stickman.createFixture(fixtureDef);
         circle.dispose();
         return stickman;
@@ -77,13 +76,20 @@ public class ZWorld {
 
 
     public void update(float delta) {
+        System.out.println(System.currentTimeMillis());
+        if (System.currentTimeMillis()>timePastLastCreate+200) {
+                Body stickman = createStickman();
+                stickman.setTransform((float) Math.random() * 50, (float) Math.random() * 20, 0);
+                stickman.setFixedRotation(true);
+            timePastLastCreate = System.currentTimeMillis();
+        }
     }
 
     public World getWorld() {
-        return this.world;
+        return world;
     }
 
     public void dispose() {
-        this.world.dispose();
+        world.dispose();
     }
 }

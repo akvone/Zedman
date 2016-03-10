@@ -38,6 +38,7 @@ public class GameScreen extends ZedmanScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); //And clear the screen with this color
 
 		cameraController.update(delta);
+		zworld.update(delta);
 
 		screenLogger.render();
 		controlRenderer.render();
