@@ -62,14 +62,14 @@ public class ZWorld {
         MapUtils mapUtils = new MapUtils("Maps/test.tmx", world);
         tiledMapRenderer = mapUtils.getTiledMapRenderer();
 
-//        for(int i = 0; i < this.width; ++i) {
-//            Body boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 2.0F);
-//            boxGround.setTransform((float)i, 0.0F, 0.0F);
-//            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("bd");
-//            boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 0.0F);
-//            boxGround.setTransform((float)i, (float)(this.height - 1), 0.0F);
-//            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("b");
-//        }
+        for(int i = 0; i < this.width; ++i) {
+            Body boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 2.0F);
+            boxGround.setTransform((float)i, 0.0F, 0.0F);
+            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("bd");
+            boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 0.0F);
+            boxGround.setTransform((float)i, (float)(this.height - 1), 0.0F);
+            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("b");
+        }
 
     }
 

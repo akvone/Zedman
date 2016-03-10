@@ -20,9 +20,8 @@ public class MapUtils implements MediaDisposer.Disposable {
     public MapUtils(String mapPath, World world){
         this.mapPath = mapPath;
         map = new TmxMapLoader().load(mapPath);
-        TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get(layerName).getObjects());
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map);
-
+        TiledObjectUtil.parseTiledObjectLayer(world, map.getLayers().get(layerName).getObjects());
     }
 
     public OrthogonalTiledMapRenderer getTiledMapRenderer() {
@@ -48,5 +47,7 @@ public class MapUtils implements MediaDisposer.Disposable {
     @Override
     public void dispose() {
         //TODO: dispose map
+        map.dispose();
+        tiledMapRenderer.dispose();
     }
 }

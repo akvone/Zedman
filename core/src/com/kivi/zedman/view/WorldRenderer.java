@@ -34,6 +34,7 @@ public class WorldRenderer {
     Texture playerTexture;
     public Map<String, TextureRegion> textureRegions;
     Array<Body> bodies;
+    private OrthogonalTiledMapRenderer tmr;
 
     public WorldRenderer(ZWorld zWorld, boolean debug) {
         this.zWorld = zWorld;
@@ -45,6 +46,7 @@ public class WorldRenderer {
         cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
         SetCamera(0, 0);
         bodies = new Array<Body>();
+        tmr = zWorld.getTiledMapRenderer();
     }
 
     private void loadTextures() {
@@ -55,7 +57,6 @@ public class WorldRenderer {
         textureRegions.put("brick2", tmp[1][0]);
         textureRegions.put("brick3", tmp[1][1]);
         playerTexture = tmp[0][0].getTexture();
-
     }
 
     public void SetCamera(float x, float y) {
@@ -63,18 +64,22 @@ public class WorldRenderer {
         cam.update();
     }
 
+    public void update(float delta){
+
+        zWorld.getWorld().step(delta, 6, 2); //Arguments: 1)zWorld update time 2)? 3)?
+        spriteBatch.setProjectionMatrix(cam.combined);
+        tmr.setView(cam);
+    }
+
     public void render(float delta) {
+        update(delta);
+		tmr.render();
         renderer.render(zWorld.getWorld(), cam.combined);
         spriteBatch.begin();
-        spriteBatch.draw(playerTexture, zWorld.getPlayer().getPosition().x*Constants.PPM+32, 290+zWorld.getPlayer().getPosition().y*Constants.PPM);
-        spriteBatch.draw(playerTexture, zWorld.getPlayer().getLocalCenter().x*Constants.PPM, zWorld.getPlayer().getLocalCenter().y*Constants.PPM);
-        spriteBatch.draw(playerTexture, zWorld.getPlayer().getWorldCenter().x*Constants.PPM, zWorld.getPlayer().getWorldCenter().y*Constants.PPM);
 //        this.drawPlayer();
-
-//        drawBlocks();
+        drawBlocks();
 //        this.font.drawMultiLine(this.spriteBatch, "friction: " + this.zWorld.getPlayer().getFriction() + "\ngrounded: " + WorldController.grounded + "\nvelocityX:" + this.zWorld.getPlayer().getVelocity().x, this.zWorld.getPlayer().getPosition().x * this.ppuX + 20.0F, this.zWorld.getPlayer().getPosition().y * this.ppuY);
         spriteBatch.end();
-        zWorld.getWorld().step(delta, 4, 4); //Arguments: 1)zWorld update time 2)? 3)?
     }
 
     private void drawBlocks() {
@@ -99,5 +104,8 @@ public class WorldRenderer {
 
     public void dispose() {
         this.zWorld.dispose();
+        texture.dispose();
+        playerTexture.dispose();
+        spriteBatch.dispose();
     }
 }
