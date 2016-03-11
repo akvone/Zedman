@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.physics.box2d.World;
+import com.kivi.zedman.ZWorld;
 
 import java.util.ArrayList;
 
@@ -13,10 +15,13 @@ import java.util.ArrayList;
 
 //Need to rewrite
 public class ScreenLogger {
+    ZWorld zworld;
+
     private SpriteBatch batch;
     private BitmapFont font;
 
-    public ScreenLogger() {
+    public ScreenLogger(ZWorld zworld) {
+        this.zworld=zworld;
         loadAssets();
     }
 
@@ -42,6 +47,7 @@ public class ScreenLogger {
                 " FPS - "+ Gdx.graphics.getFramesPerSecond());
         systemInformation.add("1 touchX - "+ Gdx.input.getX(0)+" touchY - "+ Gdx.input.getY(0));
         systemInformation.add("2 touchX - "+ Gdx.input.getX(1)+" touchY - "+ Gdx.input.getX(1));
+        systemInformation.add("Objects in world - " + zworld.getWorld().getBodyCount());
 
         return systemInformation;
     }

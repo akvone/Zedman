@@ -25,7 +25,7 @@ public class GameScreen extends ZedmanScreen {
 	@Override
 	public void show () {
 		zworld = new ZWorld();
-		screenLogger = new ScreenLogger();
+		screenLogger = new ScreenLogger(zworld);
 		controlRenderer = new OnscreenControlRenderer();
 		worldRenderer = new WorldRenderer(zworld, true);
 		cameraController = new CameraController(worldRenderer.cam);

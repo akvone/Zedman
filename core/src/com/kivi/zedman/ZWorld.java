@@ -23,8 +23,7 @@ public class ZWorld {
     public int width = 50;
     public int height = 20;
 
-    float pixelSize = 0.5f;
-
+    public float pixelSize = 0.5f;
     public long timePastLastCreate = 0;
 
     public ZWorld() {
@@ -81,10 +80,10 @@ public class ZWorld {
 
     public void update(float delta) {
         System.out.println(System.currentTimeMillis());
-        if (System.currentTimeMillis()>timePastLastCreate+1) {
-                Body stickman = createStickman();
-                stickman.setTransform((float) Math.random() * 50, (float) Math.random() * 20, 0);
-                stickman.setFixedRotation(true);
+        if (System.currentTimeMillis()>timePastLastCreate+10) {
+            Body stickman = createStickman();
+            stickman.setTransform((float) Math.random() * 50, (float) Math.random() * 20, 0);
+            stickman.setFixedRotation(true);
             timePastLastCreate = System.currentTimeMillis();
         }
     }
