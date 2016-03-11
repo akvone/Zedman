@@ -79,7 +79,6 @@ public class ZWorld {
 
 
     public void update(float delta) {
-        System.out.println(System.currentTimeMillis());
         if (System.currentTimeMillis()>timePastLastCreate+10) {
             Body stickman = createStickman();
             stickman.setTransform((float) Math.random() * 50, (float) Math.random() * 20, 0);
