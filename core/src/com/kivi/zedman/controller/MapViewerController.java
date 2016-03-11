@@ -8,13 +8,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 /**
  * Created by Kirill on 08.03.2016.
  */
-public class CameraController {
+public class MapViewerController {
 
     OrthographicCamera cam;
     float x;
     float y;
 
-    public CameraController(OrthographicCamera cam){
+    public MapViewerController(OrthographicCamera cam){
         this.cam = cam;
     }
 
