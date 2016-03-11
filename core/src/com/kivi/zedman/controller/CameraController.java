@@ -3,6 +3,7 @@ package com.kivi.zedman.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.kivi.zedman.utils.Constants;
 
 
 /**
@@ -38,11 +39,11 @@ public class CameraController {
             cam.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_9)){
-            cam.setToOrtho(false,cam.viewportWidth-1,cam.viewportHeight-1);
+            cam.setToOrtho(false,cam.viewportWidth-1* Constants.PPM,cam.viewportHeight-1*Constants.PPM);
             cam.update();
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_0)){
-            cam.setToOrtho(false,cam.viewportWidth+1,cam.viewportHeight+1);
+            cam.setToOrtho(false,cam.viewportWidth+1*Constants.PPM,cam.viewportHeight+1* Constants.PPM);
             cam.update();
         }
     }

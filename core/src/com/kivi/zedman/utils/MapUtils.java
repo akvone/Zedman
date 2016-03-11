@@ -7,7 +7,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.sun.media.jfxmediaimpl.MediaDisposer;
 
 /**
- * Created by 1 on 06.03.2016.
+ * Class for loading .tmx maps and parsing their "Collision layer" as physical objects
  */
 public class MapUtils implements MediaDisposer.Disposable {
 

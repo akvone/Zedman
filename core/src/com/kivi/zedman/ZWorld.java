@@ -12,6 +12,8 @@ import com.badlogic.gdx.utils.Array;
 import com.kivi.zedman.controller.ZContactListener;
 import com.kivi.zedman.utils.MapUtils;
 
+import static com.kivi.zedman.utils.Constants.PPM;
+
 /**
  * Created by Kirill on 06.03.2016.
  */
@@ -24,10 +26,6 @@ public class ZWorld {
     public int width = 30;
     public int height = 8;
     Body player;
-
-    public void setPlayer(Body player) {
-        this.player = player;
-    }
 
     public Body getPlayer() {
         return player;
@@ -47,6 +45,7 @@ public class ZWorld {
     }
 
     public ZWorld() {
+        player = createBox(32, 290, 32, 32, false);     //Creating player
         this.world.setContactListener(new ZContactListener(this.world));
         this.createWorld();
     }
@@ -62,14 +61,14 @@ public class ZWorld {
         MapUtils mapUtils = new MapUtils("Maps/test.tmx", world);
         tiledMapRenderer = mapUtils.getTiledMapRenderer();
 
-        for(int i = 0; i < this.width; ++i) {
-            Body boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 2.0F);
-            boxGround.setTransform((float)i, 0.0F, 0.0F);
-            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("bd");
-            boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 0.0F);
-            boxGround.setTransform((float)i, (float)(this.height - 1), 0.0F);
-            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("b");
-        }
+//        for(int i = 0; i < this.width; ++i) {
+//            Body boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 2.0F);
+//            boxGround.setTransform((float)i, 0.0F, 0.0F);
+//            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("bd");
+//            boxGround = this.createBox(BodyType.StaticBody, 0.5F, 0.5F, 0.0F);
+//            boxGround.setTransform((float)i, (float)(this.height - 1), 0.0F);
+//            ((Fixture)boxGround.getFixtureList().get(0)).setUserData("b");
+//        }
 
     }
 
@@ -86,5 +85,25 @@ public class ZWorld {
 
     public void dispose() {
         this.world.dispose();
+    }
+    public Body createBox(int x, int y, int width, int height, boolean isStatic) {
+        Body pBody;
+        BodyDef def = new BodyDef();
+
+        if(isStatic)
+            def.type = BodyDef.BodyType.StaticBody;
+        else
+            def.type = BodyDef.BodyType.DynamicBody;
+
+        def.position.set(x /PPM , y  / PPM);
+        def.fixedRotation = true;
+        pBody = world.createBody(def);
+
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width / 2 / PPM, height / 2 / PPM);
+
+        pBody.createFixture(shape, 1.0f);
+        shape.dispose();
+        return pBody;
     }
 }

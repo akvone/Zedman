@@ -14,7 +14,9 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
-
+/**
+ *  Supportive class for MapUtils. Why don't we make it inner class?
+ */
 public class TiledObjectUtil {
 
     public static void parseTiledObjectLayer(World world, MapObjects objects){
@@ -27,15 +29,15 @@ public class TiledObjectUtil {
             } else {
                 if (object instanceof EllipseMapObject){
                     CircleShape cs = new CircleShape();
-                    cs.setRadius(((EllipseMapObject) object).getEllipse().height/Constants.PPM);
-                    cs.setPosition(new Vector2(((EllipseMapObject) object).getEllipse().x/Constants.PPM,
-                            ((EllipseMapObject) object).getEllipse().y/Constants.PPM));
+                    cs.setRadius(((EllipseMapObject) object).getEllipse().height);
+                    cs.setPosition(new Vector2(((EllipseMapObject) object).getEllipse().x,
+                            ((EllipseMapObject) object).getEllipse().y));
                     shape = cs;
                 } else {
                     if (object instanceof RectangleMapObject){
                         PolygonShape ps = new PolygonShape();
-                        ps.setAsBox(((RectangleMapObject) object).getRectangle().getWidth() / Constants.PPM,
-                                ((RectangleMapObject) object).getRectangle().getHeight()/Constants.PPM);
+                        ps.setAsBox(((RectangleMapObject) object).getRectangle().getWidth() ,
+                                ((RectangleMapObject) object).getRectangle().getHeight());
                         shape = ps;
                     } else {
                         continue;

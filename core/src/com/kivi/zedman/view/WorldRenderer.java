@@ -32,6 +32,7 @@ public class WorldRenderer {
     private SpriteBatch spriteBatch;
     Texture texture;
     Texture playerTexture;
+    Body player;
     public Map<String, TextureRegion> textureRegions;
     Array<Body> bodies;
     private OrthogonalTiledMapRenderer tmr;
@@ -43,10 +44,11 @@ public class WorldRenderer {
         this.spriteBatch = new SpriteBatch();
         textureRegions = new HashMap();
         loadTextures();
-        cam = new OrthographicCamera(CAMERA_WIDTH, CAMERA_HEIGHT);
+        cam = new OrthographicCamera(CAMERA_WIDTH * Constants.PPM, CAMERA_HEIGHT *Constants.PPM);
         SetCamera(0, 0);
         bodies = new Array<Body>();
         tmr = zWorld.getTiledMapRenderer();
+        player = zWorld.getPlayer();
     }
 
     private void loadTextures() {
@@ -56,7 +58,7 @@ public class WorldRenderer {
         textureRegions.put("brick1", tmp[0][1]);
         textureRegions.put("brick2", tmp[1][0]);
         textureRegions.put("brick3", tmp[1][1]);
-        playerTexture = tmp[0][0].getTexture();
+        playerTexture = texture;        //Temporary solution
     }
 
     public void SetCamera(float x, float y) {
@@ -65,19 +67,22 @@ public class WorldRenderer {
     }
 
     public void update(float delta){
-
-        zWorld.getWorld().step(delta, 6, 2); //Arguments: 1)zWorld update time 2)? 3)?
+        cam.update();                        // Do not move it down. Trust me.
+        zWorld.getWorld().step(delta, 6, 2); //Arguments: 1)zWorld update time 2)6 3)2 best practice
         spriteBatch.setProjectionMatrix(cam.combined);
         tmr.setView(cam);
     }
 
     public void render(float delta) {
         update(delta);
-		tmr.render();
-        renderer.render(zWorld.getWorld(), cam.combined);
+		tmr.render();                                                           //Render map textures
+        renderer.render(zWorld.getWorld(), cam.combined.scl(Constants.PPM));
         spriteBatch.begin();
+        float x = zWorld.getPlayer().getPosition().x * Constants.PPM;           //Drawing random
+        float y = zWorld.getPlayer().getPosition().y * Constants.PPM;           //texture around
+        spriteBatch.draw(playerTexture, x, y);                                  //player
 //        this.drawPlayer();
-        drawBlocks();
+//        drawBlocks();
 //        this.font.drawMultiLine(this.spriteBatch, "friction: " + this.zWorld.getPlayer().getFriction() + "\ngrounded: " + WorldController.grounded + "\nvelocityX:" + this.zWorld.getPlayer().getVelocity().x, this.zWorld.getPlayer().getPosition().x * this.ppuX + 20.0F, this.zWorld.getPlayer().getPosition().y * this.ppuY);
         spriteBatch.end();
     }
