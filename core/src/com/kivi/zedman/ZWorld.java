@@ -1,5 +1,7 @@
 package com.kivi.zedman;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -7,14 +9,14 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kivi.zedman.controller.PlayerController;
 import com.kivi.zedman.controller.ZContactListener;
-import com.kivi.zedman.utils.MapUtils;
+import com.kivi.zedman.utils.MapLoader;
 
 import static com.kivi.zedman.utils.Constants.PPM;
-import java.util.Random;
 
 /**
  * Created by Kirill on 06.03.2016.
@@ -51,7 +53,7 @@ public class ZWorld {
         world.setContactListener(new ZContactListener(this.world));
         createWorld();
 
-        player = createBox(32, 290, 32, 32, false);
+        player = createStickman(32, 290, 32, 32);
         playerController = new PlayerController(player);
     }
 
@@ -63,8 +65,8 @@ public class ZWorld {
         def.type = BodyDef.BodyType.DynamicBody;
         Body boxP = this.world.createBody(def);
 
-        MapUtils mapUtils = new MapUtils("Maps/test.tmx", world);
-        tiledMapRenderer = mapUtils.getTiledMapRenderer();
+        MapLoader mapLoader = new MapLoader("Maps/test.tmx", world);
+        tiledMapRenderer = mapLoader.getTiledMapRenderer();
 
 
 //        for(int i = 0; i < this.width; i++) {
@@ -87,7 +89,7 @@ public class ZWorld {
             def.type = BodyDef.BodyType.DynamicBody;
 
         def.position.set(x /PPM , y  / PPM);
-        def.fixedRotation = true;
+        def.fixedRotation = false;
         pBody = world.createBody(def);
 
         PolygonShape shape = new PolygonShape();
@@ -98,15 +100,21 @@ public class ZWorld {
         return pBody;
     }
 
-    private Body createStickman(){
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.DynamicBody;
-        bodyDef.angularVelocity = 10;
-        bodyDef.fixedRotation = true;
-        Body stickman = world.createBody(bodyDef);
+    private Body createStickman(int x, int y, int width, int height) {
+        Body stickman;
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+
+        def.position.set(x /PPM , y  / PPM);
+        def.fixedRotation = false;
+        stickman = world.createBody(def);
+
+//        PolygonShape shape = new PolygonShape();
+//        shape.setAsBox(width / 2 / PPM, height / 2 / PPM);
+//        shape.setAsBox(width / 3 / PPM, height / 3 / PPM);
 
         CircleShape circle = new CircleShape();
-        circle.setRadius(1);
+
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
         fixtureDef.density = 0.5f;
@@ -114,13 +122,37 @@ public class ZWorld {
         fixtureDef.restitution = 1f;
 
         stickman.createFixture(fixtureDef);
-        circle.dispose();
+        circle.dispose();;
         return stickman;
     }
+
+//    private Body createRotatingCircle(){
+//        BodyDef bodyDef = new BodyDef();
+//        bodyDef.type = BodyType.DynamicBody;
+//        bodyDef.angularVelocity = 10;
+//        bodyDef.fixedRotation = true;
+//        Body stickman = world.createBody(bodyDef);
+//
+//        CircleShape circle = new CircleShape();
+//        circle.setRadius(1);
+//        FixtureDef fixtureDef = new FixtureDef();
+//        fixtureDef.shape = circle;
+//        fixtureDef.density = 0.5f;
+//        fixtureDef.friction = 0.5f;
+//        fixtureDef.restitution = 1f;
+//
+//        stickman.createFixture(fixtureDef);
+//        circle.dispose();
+//        return stickman;
+//    }
 
 
     public void update(float delta) {
         playerController.update(delta);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.Y)) {
+            player.setTransform(10,10,0);
+        }
 //        if (System.currentTimeMillis()>timePastLastCreate+10) {
 //            Body stickman = createStickman();
 //            stickman.setTransform((float) Math.random() * 50, (float) Math.random() * 20, 0);

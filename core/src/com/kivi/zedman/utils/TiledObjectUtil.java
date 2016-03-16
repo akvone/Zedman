@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- *  Supportive class for MapUtils. Why don't we make it inner class?
+ *  Supportive class for MapLoader. Why don't we make it inner class?
  */
 public class TiledObjectUtil {
 
@@ -53,6 +53,7 @@ public class TiledObjectUtil {
             shape.dispose();
         }
     }
+
     private static ChainShape createPolyline(PolylineMapObject polyline){
         float[] vertices = polyline.getPolyline().getTransformedVertices();
         Vector2[] worldVertices = new Vector2[vertices.length/2];
