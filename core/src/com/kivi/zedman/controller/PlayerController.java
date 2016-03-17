@@ -3,14 +3,15 @@ package com.kivi.zedman.controller;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.kivi.zedman.Player;
 
 /**
  * Created by 1 on 09.03.2016.
  */
 public class PlayerController {
-    Body player;
+    Player player;
 
-    public PlayerController(Body pl){
+    public PlayerController(Player pl){
         player = pl;
     }
 
@@ -29,10 +30,10 @@ public class PlayerController {
         }
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player.applyForceToCenter(0, 300, false);
+            player.getBody().applyForceToCenter(0, 300, false);
         }
 
-        player.setLinearVelocity(horizontalForce * 5, player.getLinearVelocity().y);
+        player.getBody().setLinearVelocity(horizontalForce * 5, player.getBody().getLinearVelocity().y);
 
     }
 }

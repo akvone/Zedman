@@ -9,7 +9,7 @@ import com.sun.media.jfxmediaimpl.MediaDisposer;
 /**
  * Class for loading .tmx maps and parsing their "Collision layer" as physical objects
  */
-public class MapUtils implements MediaDisposer.Disposable {
+public class MapLoader implements MediaDisposer.Disposable {
 
     OrthogonalTiledMapRenderer tiledMapRenderer;
     TiledMap map;
@@ -17,7 +17,7 @@ public class MapUtils implements MediaDisposer.Disposable {
 
     String layerName = "Collision layer";
 
-    public MapUtils(String mapPath, World world){
+    public MapLoader(String mapPath, World world){
         this.mapPath = mapPath;
         map = new TmxMapLoader().load(mapPath);
         tiledMapRenderer = new OrthogonalTiledMapRenderer(map);

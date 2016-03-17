@@ -15,7 +15,7 @@ import com.badlogic.gdx.physics.box2d.Shape;
 import com.badlogic.gdx.physics.box2d.World;
 
 /**
- *  Supportive class for MapUtils. Why don't we make it inner class?
+ *  Supportive class for MapLoader. Why don't we make it inner class?
  */
 public class TiledObjectUtil {
 

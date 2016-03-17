@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="12" height="12" tilewidth="32" tileheight="32" nextobjectid="5">
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="1000" height="100" tilewidth="32" tileheight="32" nextobjectid="5">
  <tileset firstgid="1" name="atlas" tilewidth="32" tileheight="32" tilecount="4" columns="2">
-  <image source="../data/atlas.png" width="64" height="64"/>
+  <image source="../Images/atlas.png" width="64" height="64"/>
  </tileset>
- <layer name="Слой тайлов 1" width="12" height="12">
+ <layer name="Слой тайлов 1" width="1000" height="100">
   <data encoding="base64" compression="zlib">
-   eJxjYBg4wDKqnubqmWiMAS8gAFE=
+   eJztw7EJAAAIA7Di/0d7RdEhgSQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQNuoqqqqLwIAAAC3Fm9zB9M=
   </data>
  </layer>
  <objectgroup name="Collision layer">
-  <object id="2" x="0" y="320">
-   <polyline points="0,0 0,64 384,64 384,0 0,0 3,-2"/>
-  </object>
-  <object id="4" x="224" y="320">
-   <polyline points="0,0 0,-256 32,-256 32,0"/>
+  <object id="4" x="0" y="3136">
+   <polyline points="0,0 0,64 32,64 32,32 32000,32 32000,0 0,0"/>
   </object>
  </objectgroup>
 </map>

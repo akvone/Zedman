@@ -48,6 +48,7 @@ public class ScreenLogger {
         systemInformation.add("1 touchX - "+ Gdx.input.getX(0)+" touchY - "+ Gdx.input.getY(0));
         systemInformation.add("2 touchX - "+ Gdx.input.getX(1)+" touchY - "+ Gdx.input.getX(1));
         systemInformation.add("Objects in world - " + zworld.getWorld().getBodyCount());
+        systemInformation.add("Time: " + ZWorld.currentTime);
 
         return systemInformation;
     }

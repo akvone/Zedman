@@ -9,12 +9,14 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.kivi.zedman.controller.PlayerController;
 import com.kivi.zedman.controller.ZContactListener;
-import com.kivi.zedman.utils.MapUtils;
+import com.kivi.zedman.utils.MapLoader;
 
 import static com.kivi.zedman.utils.Constants.PPM;
-import java.util.Random;
+
+import java.util.HashMap;
 
 /**
  * Created by Kirill on 06.03.2016.
@@ -32,9 +34,17 @@ public class ZWorld {
     public float pixelSize = 0.5f;
     public long timePastLastCreate = 0;
 
-    Body player;
+    public static long startTime;
+    public static long currentTime = 0;
 
-    public Body getPlayer() {
+    public static HashMap<String, Bot> bots; //Хэш таблица для хранения ботов по ID (cм. в SocketUtil)
+
+
+
+
+    Player player;
+
+    public Player getPlayer() {
         return player;
     }
 
@@ -47,11 +57,14 @@ public class ZWorld {
 
     public ZWorld() {
 
-        world = new World(new Vector2(0, -9.8f), true);  //Arguments: gravity vector, and object's sleep boolean
-        world.setContactListener(new ZContactListener(this.world));
+        bots = new HashMap<String, Bot>();
+
+        world = new World(new Vector2(0, -10f), true);  //Arguments: gravity vector, and object's sleep boolean
+        world.setContactListener(new ZContactListener(this));
         createWorld();
 
-        player = createBox(32, 290, 32, 32, false);
+        player = new Player(this ,createBox(64, 80 + 320, 32, 32, false));
+        startTime = TimeUtils.millis();
         playerController = new PlayerController(player);
     }
 
@@ -63,20 +76,9 @@ public class ZWorld {
         def.type = BodyDef.BodyType.DynamicBody;
         Body boxP = this.world.createBody(def);
 
-        MapUtils mapUtils = new MapUtils("Maps/test.tmx", world);
-        tiledMapRenderer = mapUtils.getTiledMapRenderer();
-
-
-//        for(int i = 0; i < this.width; i++) {
-//            Body boxGround = createBox(pixelSize, pixelSize, 0);
-//            boxGround.setTransform(i, 0, 0);
-//            boxGround.getFixtureList().get(0).setUserData("Ground");
-//            boxGround = createBox(pixelSize, pixelSize, 0);
-//            boxGround.setTransform(i, height - 1, 0);
-//            boxGround.getFixtureList().get(0).setUserData("Ceiling");
-//        }
+        MapLoader mapLoader = new MapLoader("Maps/test.tmx", world);
+        tiledMapRenderer = mapLoader.getTiledMapRenderer();
     }
-
     public Body createBox(int x, int y, int width, int height, boolean isStatic) {
         Body pBody;
         BodyDef def = new BodyDef();
