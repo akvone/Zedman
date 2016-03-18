@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 
 public abstract class ZedmanScreen implements Screen {
-	Game game;
+	protected Game game;
 
 	public ZedmanScreen (Game game) {
 		this.game = game;

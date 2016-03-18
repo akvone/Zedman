@@ -8,8 +8,15 @@ import com.kivi.zedman.screens.GameScreen;
  */
 
 public class Zedman extends Game {
+
+	public ActionResolver androidActionResolver;
+
+	public Zedman(ActionResolver actionResolver) {
+		androidActionResolver = actionResolver;
+	}
+
 	@Override
 	public void create () {
-		setScreen(new GameScreen(this));
+		setScreen(new GameScreen(this, androidActionResolver));
 	}
 }
