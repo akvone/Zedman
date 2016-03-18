@@ -24,36 +24,29 @@ import static com.kivi.zedman.utils.Constants.PPM;
 
 
 public class ZWorld {
-    World world;
 
     PlayerController playerController;
 
-    public int width = 50;
-    public int height = 20;
-
-    public float pixelSize = 0.5f;
-    public long timePastLastCreate = 0;
-
-    Body player;
+    private Body player;
+    private World world;
+    private OrthogonalTiledMapRenderer tiledMapRenderer;
 
     public Body getPlayer() {
         return player;
     }
-
+    public World getWorld() {
+        return world;
+    }
     public OrthogonalTiledMapRenderer getTiledMapRenderer() {
         return tiledMapRenderer;
     }
 
-    private OrthogonalTiledMapRenderer tiledMapRenderer;
-
 
     public ZWorld() {
-
         world = new World(new Vector2(0, -9.8f), true);  //Arguments: gravity vector, and object's sleep boolean
         world.setContactListener(new ZContactListener(this.world));
         createWorld();
-
-        player = createStickman(32, 290, 32, 32);
+        player = createStickman(32,320,32,32);
         playerController = new PlayerController(player);
     }
 
@@ -61,13 +54,9 @@ public class ZWorld {
     }
 
     private void createWorld() {
-        BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
-        Body boxP = this.world.createBody(def);
-
         MapLoader mapLoader = new MapLoader("Maps/test.tmx", world);
         tiledMapRenderer = mapLoader.getTiledMapRenderer();
-
+    }
 
 //        for(int i = 0; i < this.width; i++) {
 //            Body boxGround = createBox(pixelSize, pixelSize, 0);
@@ -77,52 +66,46 @@ public class ZWorld {
 //            boxGround.setTransform(i, height - 1, 0);
 //            boxGround.getFixtureList().get(0).setUserData("Ceiling");
 //        }
-    }
-
-    public Body createBox(int x, int y, int width, int height, boolean isStatic) {
-        Body pBody;
-        BodyDef def = new BodyDef();
-
-        if(isStatic)
-            def.type = BodyDef.BodyType.StaticBody;
-        else
-            def.type = BodyDef.BodyType.DynamicBody;
-
-        def.position.set(x /PPM , y  / PPM);
-        def.fixedRotation = false;
-        pBody = world.createBody(def);
-
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(width / 2 / PPM, height / 2 / PPM);
-
-        pBody.createFixture(shape, 1.0f);
-        shape.dispose();
-        return pBody;
-    }
+//
+//    public Body createBox(int x, int y, int width, int height, boolean isStatic) {
+//        Body pBody;
+//        BodyDef def = new BodyDef();
+//
+//        if(isStatic)
+//            def.type = BodyDef.BodyType.StaticBody;
+//        else
+//            def.type = BodyDef.BodyType.DynamicBody;
+//
+//        def.position.set(x /PPM , y  / PPM);
+//        def.fixedRotation = false;
+//        pBody = world.createBody(def);
+//
+//        PolygonShape shape = new PolygonShape();
+//        shape.setAsBox(width / 2 / PPM, height / 2 / PPM);
+//
+//        pBody.createFixture(shape, 1.0f);
+//        shape.dispose();
+//        return pBody;
+//    }
 
     private Body createStickman(int x, int y, int width, int height) {
         Body stickman;
         BodyDef def = new BodyDef();
         def.type = BodyDef.BodyType.DynamicBody;
-
-        def.position.set(x /PPM , y  / PPM);
+        def.position.set(x/PPM,y/PPM);
         def.fixedRotation = false;
         stickman = world.createBody(def);
 
-//        PolygonShape shape = new PolygonShape();
-//        shape.setAsBox(width / 2 / PPM, height / 2 / PPM);
-//        shape.setAsBox(width / 3 / PPM, height / 3 / PPM);
-
-        CircleShape circle = new CircleShape();
-
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width/PPM, height/PPM);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
+        fixtureDef.shape = shape;
         fixtureDef.density = 0.5f;
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution = 1f;
 
         stickman.createFixture(fixtureDef);
-        circle.dispose();;
+        shape.dispose();
         return stickman;
     }
 
@@ -162,9 +145,6 @@ public class ZWorld {
     }
 
 
-    public World getWorld() {
-        return world;
-    }
 
     public void dispose() {
         world.dispose();
