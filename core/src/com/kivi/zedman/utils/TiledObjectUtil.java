@@ -53,12 +53,13 @@ public class TiledObjectUtil {
             shape.dispose();
         }
     }
+
     private static ChainShape createPolyline(PolylineMapObject polyline){
         float[] vertices = polyline.getPolyline().getTransformedVertices();
         Vector2[] worldVertices = new Vector2[vertices.length/2];
 
         for (int i = 0; i < worldVertices.length; i++){
-            worldVertices[i] = new Vector2(vertices[2*i] /Constants.PPM, vertices[2*i+1]/Constants.PPM);
+            worldVertices[i] = new Vector2(vertices[2*i]/Constants.PPM, vertices[2*i+1]/Constants.PPM);
         }
         ChainShape cs = new ChainShape();
         cs.createChain(worldVertices);
