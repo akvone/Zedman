@@ -1,5 +1,6 @@
 package com.kivi.zedman.controller;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -10,29 +11,69 @@ import com.badlogic.gdx.physics.box2d.Body;
 public class PlayerController {
     Body player;
 
+    boolean jump;
+    boolean runLeft;
+    boolean runRight;
+    boolean teleport;
+
     public PlayerController(Body pl){
         player = pl;
     }
 
     public void update (float deltaTime) {
-        processKeys();
+        process();
+    }
+
+    private void process () {
+        int horizontalForce = 0;
+
+        runRight = false;
+        runLeft = false;
+        jump = false;
+        teleport = false;
+
+        if (Gdx.app.getType()== Application.ApplicationType.Android) {
+            processTouches();
+        }
+        if (Gdx.app.getType()== Application.ApplicationType.Desktop) {
+            processKeys();
+        }
+        if(jump) {
+            player.applyForceToCenter(0, 300, false);
+        }
+        if (runLeft) {
+            horizontalForce -= 1;
+        }
+        if (runRight){
+            horizontalForce += 1;
+        }
+        player.setLinearVelocity(horizontalForce * 5, player.getLinearVelocity().y);
+        if (teleport){
+            player.setTransform(10,10,0);
+        }
     }
 
     private void processKeys () {
-        int horizontalForce = 0;
+        runLeft = Gdx.input.isKeyPressed(Input.Keys.LEFT);
+        runRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
+        jump = Gdx.input.isKeyJustPressed(Input.Keys.UP);
+        teleport = Gdx.input.isKeyJustPressed(Input.Keys.Y);
+    }
 
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            horizontalForce -= 1;
+    private void processTouches () {
+        if (Gdx.input.isTouched(0)){
+            float x;
+            float y;
+            for (int i=0;Gdx.input.isTouched(i);i++) {
+                x=Gdx.input.getX(i);
+                y=Gdx.input.getY(i);
+                x=x/(float)Gdx.graphics.getWidth()*1280;
+                y=720-y/(float)Gdx.graphics.getHeight()*720;
+                runLeft = (x > 0 && x < 128 && y > 0 && y < 128)||runLeft;
+                runRight = (x > 128 && x < 256 && y >0 && y < 128)||runRight;
+                jump = (x > 1280-128 && x < 1280 && y >0 && y < 128)||jump;
+                teleport = (x > 1280-256 && x < 1280-128 && y >0 && y < 128)||teleport;
+            }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            horizontalForce += 1;
-        }
-
-        if(Gdx.input.isKeyJustPressed(Input.Keys.UP)) {
-            player.applyForceToCenter(0, 300, false);
-        }
-
-        player.setLinearVelocity(horizontalForce * 5, player.getLinearVelocity().y);
-
     }
 }
