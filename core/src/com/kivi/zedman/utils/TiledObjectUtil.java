@@ -36,8 +36,13 @@ public class TiledObjectUtil {
                 } else {
                     if (object instanceof RectangleMapObject){
                         PolygonShape ps = new PolygonShape();
-                        ps.setAsBox(((RectangleMapObject) object).getRectangle().getWidth() ,
-                                ((RectangleMapObject) object).getRectangle().getHeight());
+                        Vector2 center = new Vector2();
+                        ((RectangleMapObject) object).getRectangle().getCenter(center);
+                        center.x /= Constants.PPM;
+                        center.y /= Constants.PPM;
+                        ps.setAsBox(((RectangleMapObject) object).getRectangle().getWidth()/Constants.PPM/2 ,
+                                ((RectangleMapObject) object).getRectangle().getHeight()/Constants.PPM/2,
+                                center, 0);
                         shape = ps;
                     } else {
                         continue;

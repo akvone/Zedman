@@ -5,19 +5,18 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.kivi.zedman.controller.MapViewerController;
-import com.kivi.zedman.controller.MapViewerControllerAndroid;
-import com.kivi.zedman.controller.MapViewerControllerDesktop;
 import com.kivi.zedman.system.ActionResolver;
-import com.kivi.zedman.system.Zedman;
+import com.kivi.zedman.view.ScreenControlRenderer;
+import com.kivi.zedman.view.ScreenControlRendererDesktop;
 import com.kivi.zedman.view.WorldRenderer;
 import com.kivi.zedman.ZWorld;
-import com.kivi.zedman.view.OnscreenControlRenderer;
+import com.kivi.zedman.view.ScreenControlRendererAndroid;
 import com.kivi.zedman.view.ScreenLogger;
 import com.badlogic.gdx.graphics.GL20;
 
 public class GameScreen extends ZedmanScreen {
 	private ScreenLogger screenLogger;
-	private OnscreenControlRenderer controlRenderer;
+	private ScreenControlRenderer controlRenderer;
 	private WorldRenderer worldRenderer;
 	private MapViewerController mapViewerController;
 	private ZWorld zworld;
@@ -35,6 +34,7 @@ public class GameScreen extends ZedmanScreen {
 		zworld = new ZWorld();
 		screenLogger = new ScreenLogger(zworld);
 		worldRenderer = new WorldRenderer(zworld, true);
+		mapViewerController = new MapViewerController(worldRenderer.cam);
 		platformDependency();
 
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f); //Set clear color as black
@@ -47,9 +47,9 @@ public class GameScreen extends ZedmanScreen {
 		mapViewerController.update(delta);
 		zworld.update(delta);
 
+		worldRenderer.render(delta);
 		screenLogger.render();
 		controlRenderer.render();
-		worldRenderer.render(delta);
 
 		//TODO Change location of this
 		if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
@@ -66,15 +66,12 @@ public class GameScreen extends ZedmanScreen {
 	}
 
 	private void platformDependency(){
-		if (true) {//TODO rewrite this
-			controlRenderer = new OnscreenControlRenderer();
-		}
-
 		if (Gdx.app.getType()==ApplicationType.Desktop) {
-			mapViewerController = new MapViewerControllerDesktop(worldRenderer.cam);
+			//Change this!
+			controlRenderer = new ScreenControlRendererDesktop();
 		}
 		else if(Gdx.app.getType()==ApplicationType.Android){
-			mapViewerController = new MapViewerControllerAndroid(worldRenderer.cam,androidActionResolver);
+			controlRenderer = new ScreenControlRendererAndroid();
 		}
 	}
 }
