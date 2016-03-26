@@ -9,6 +9,6 @@ public class Constants {
     public static float CAMERA_WIDTH = 128f;
     public static float CAMERA_HEIGHT = 72f;
 
-    public static int STANDARD_BATCH_WIDTH = 1280;
-    public static int STANDARD_BATCH_HEIGHT = 720;
+    public static int STANDARD_BATCH_WIDTH = 900;
+    public static int STANDARD_BATCH_HEIGHT = 600;
 }
