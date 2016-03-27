@@ -7,7 +7,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.kivi.zedman.utils.Constants;
+
+import static com.kivi.zedman.utils.Constants.PPM;
 
 /**
  * Created by 1 on 17.03.2016.
@@ -53,7 +60,28 @@ public class Player {
         sprite.draw(batch);                                                     //player
         batch.end();
     }
+    public Body createBullet(float x, float y){
+        Body bullet;
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.position.set(x, y);
+        def.bullet = true;
+        def.fixedRotation = true;
 
+        bullet = zWorld.getWorld().createBody(def);
+
+        CircleShape shape = new CircleShape();
+        shape.setRadius(1/20f);
+
+//        shape.setPosition(new Vector2(x, y));
+        FixtureDef fixture = new FixtureDef();
+        fixture.shape = shape;
+
+
+        bullet.createFixture(fixture);
+        bullet.applyLinearImpulse(100f, 0f, bullet.getWorldCenter().x, bullet.getWorldCenter().y, true);
+        return bullet;
+    }
     public void update(float dt){
 
     }

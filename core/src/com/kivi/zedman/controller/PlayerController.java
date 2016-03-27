@@ -33,6 +33,11 @@ public class PlayerController {
             player.getBody().applyForceToCenter(0, 300, false);
         }
 
+        if(Gdx.input.isKeyPressed(Input.Keys.SLASH)){
+            player.createBullet(player.getBody().getWorldCenter().x+0.5f, player.getBody().getWorldCenter().y);
+            Gdx.app.log("Bullet position", player.getBody().getWorldCenter().x + " : " + player.getBody().getWorldCenter().y);
+        }
+
         player.getBody().setLinearVelocity(horizontalForce * 5, player.getBody().getLinearVelocity().y);
 
     }

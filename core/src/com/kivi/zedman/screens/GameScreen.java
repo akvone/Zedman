@@ -1,5 +1,6 @@
 package com.kivi.zedman.screens;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -52,7 +53,7 @@ public class GameScreen extends ZedmanScreen {
 		controlRenderer = new OnscreenControlRenderer();
 		worldRenderer = new WorldRenderer(zworld, true);
 		platformDependency();
-		mapViewerController = new MapViewerController(worldRenderer.cam);
+		mapViewerController = new MapViewerControllerDesktop(worldRenderer.cam);
 		socket = new SocketUtil(zworld);
 		socket.connectSocket();
 		socket.configureSocketEvent();
@@ -107,10 +108,10 @@ public class GameScreen extends ZedmanScreen {
 			controlRenderer = new OnscreenControlRenderer();
 		}
 
-		if (Gdx.app.getType()==ApplicationType.Desktop) {
+		if (Gdx.app.getType()== Application.ApplicationType.Desktop) {
 			mapViewerController = new MapViewerControllerDesktop(worldRenderer.cam);
 		}
-		else if(Gdx.app.getType()==ApplicationType.Android){
+		else if(Gdx.app.getType()==Application.ApplicationType.Android){
 			mapViewerController = new MapViewerControllerAndroid(worldRenderer.cam,androidActionResolver);
 		}
 	}

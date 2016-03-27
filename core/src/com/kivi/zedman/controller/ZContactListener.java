@@ -1,9 +1,11 @@
 package com.kivi.zedman.controller;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -25,6 +27,10 @@ public class ZContactListener implements ContactListener {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
 
+        if (bullet_wall(fa, fb)){
+            fa.getBody().destroyFixture(fa);
+        }
+
         if(fa == null || fb == null) return;
         ZWorld.currentTime = TimeUtils.millis() - ZWorld.startTime;
     }
@@ -42,5 +48,13 @@ public class ZContactListener implements ContactListener {
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
+    }
+
+    private boolean bullet_wall(Fixture fa, Fixture fb){
+
+        if(fa.getBody().isBullet() || fb.getBody().getType() == BodyDef.BodyType.StaticBody){
+            return true;
+        }
+        return false;
     }
 }
