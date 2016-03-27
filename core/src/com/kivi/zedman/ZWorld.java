@@ -24,12 +24,12 @@ import java.util.HashMap;
 
 
 public class ZWorld {
-    World world;
 
     PlayerController playerController;
 
-    public int width = 50;
-    public int height = 20;
+    private Player player;
+    private World world;
+    private OrthogonalTiledMapRenderer tiledMapRenderer;
 
     public float pixelSize = 0.5f;
     public long timePastLastCreate = 0;
@@ -38,11 +38,6 @@ public class ZWorld {
     public static long currentTime = 0;
 
     public static HashMap<String, Bot> bots; //Хэш таблица для хранения ботов по ID (cм. в SocketUtil)
-
-
-
-
-    Player player;
 
     public Player getPlayer() {
         return player;
@@ -72,11 +67,7 @@ public class ZWorld {
     }
 
     private void createWorld() {
-        BodyDef def = new BodyDef();
-        def.type = BodyDef.BodyType.DynamicBody;
-        Body boxP = this.world.createBody(def);
-
-        MapLoader mapLoader = new MapLoader("Maps/test.tmx", world);
+        MapLoader mapLoader = new MapLoader("maps/test.tmx", world);
         tiledMapRenderer = mapLoader.getTiledMapRenderer();
     }
     public Body createBox(int x, int y, int width, int height, boolean isStatic) {
@@ -123,15 +114,7 @@ public class ZWorld {
 
     public void update(float delta) {
         playerController.update(delta);
-//        if (System.currentTimeMillis()>timePastLastCreate+10) {
-//            Body stickman = createStickman();
-//            stickman.setTransform((float) Math.random() * 50, (float) Math.random() * 20, 0);
-//            stickman.setFixedRotation(true);
-//            timePastLastCreate = System.currentTimeMillis();
-//        }
     }
-
-
 
 
     public World getWorld() {

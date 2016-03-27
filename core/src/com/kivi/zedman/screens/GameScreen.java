@@ -1,6 +1,7 @@
 package com.kivi.zedman.screens;
 
 import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -12,9 +13,12 @@ import com.kivi.zedman.controller.MapViewerControllerAndroid;
 import com.kivi.zedman.controller.MapViewerControllerDesktop;
 import com.kivi.zedman.system.ActionResolver;
 import com.kivi.zedman.system.Zedman;
+import com.kivi.zedman.system.ActionResolver;
+import com.kivi.zedman.view.ScreenControlRenderer;
+import com.kivi.zedman.view.ScreenControlRendererDesktop;
 import com.kivi.zedman.view.WorldRenderer;
 import com.kivi.zedman.ZWorld;
-import com.kivi.zedman.view.OnscreenControlRenderer;
+import com.kivi.zedman.view.ScreenControlRendererAndroid;
 import com.kivi.zedman.view.ScreenLogger;
 import com.badlogic.gdx.graphics.GL20;
 
@@ -28,18 +32,16 @@ import io.socket.client.IO;
 import io.socket.emitter.Emitter;
 
 public class GameScreen extends ZedmanScreen {
+	private ScreenLogger screenLogger;
+	private ScreenControlRenderer controlRenderer;
+	private WorldRenderer worldRenderer;
+	private MapViewerController mapViewerController;
+	private ZWorld zworld;
 	private final float UPDATE_TIME = 1/60f; //Частота, с которой обновления позиции игрока посылаются на сервер
 	float timer;							 //Таймер, отвечающий за эту частоту
 	
 	SocketUtil socket;
-	private ScreenLogger screenLogger;
-	private OnscreenControlRenderer controlRenderer;
-	private WorldRenderer worldRenderer;
-	private MapViewerController mapViewerController;
-	private ZWorld zworld;
-
 	private ActionResolver androidActionResolver;
-
 
 	public GameScreen (Game game, ActionResolver actionResolver) {
 		super(game);
@@ -50,14 +52,13 @@ public class GameScreen extends ZedmanScreen {
 	public void show () {
 		zworld = new ZWorld();
 		screenLogger = new ScreenLogger(zworld);
-		controlRenderer = new OnscreenControlRenderer();
 		worldRenderer = new WorldRenderer(zworld, true);
+		mapViewerController = new MapViewerController(worldRenderer.cam);
 		platformDependency();
 		mapViewerController = new MapViewerControllerDesktop(worldRenderer.cam);
 		socket = new SocketUtil(zworld);
 		socket.connectSocket();
 		socket.configureSocketEvent();
-
 
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f); //Set clear color as black
 	}
@@ -85,9 +86,9 @@ public class GameScreen extends ZedmanScreen {
 		mapViewerController.update(delta);
 		zworld.update(delta);
 
+		worldRenderer.render(delta);
 		screenLogger.render();
 		controlRenderer.render();
-		worldRenderer.render(delta);
 
 		//TODO Change location of this
 		if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
@@ -104,17 +105,12 @@ public class GameScreen extends ZedmanScreen {
 	}
 
 	private void platformDependency(){
-		if (true) {//TODO rewrite this
-			controlRenderer = new OnscreenControlRenderer();
+		if (Gdx.app.getType()==ApplicationType.Desktop) {
+			//Change this!
+			controlRenderer = new ScreenControlRendererDesktop();
 		}
-
-		if (Gdx.app.getType()== Application.ApplicationType.Desktop) {
-			mapViewerController = new MapViewerControllerDesktop(worldRenderer.cam);
-		}
-		else if(Gdx.app.getType()==Application.ApplicationType.Android){
-			mapViewerController = new MapViewerControllerAndroid(worldRenderer.cam,androidActionResolver);
+		else if(Gdx.app.getType()==ApplicationType.Android){
+			controlRenderer = new ScreenControlRendererAndroid();
 		}
 	}
-
-
 }
