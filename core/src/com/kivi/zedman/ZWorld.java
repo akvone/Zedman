@@ -5,6 +5,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
+import com.badlogic.gdx.physics.box2d.Filter;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -13,10 +15,14 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.kivi.zedman.controller.PlayerController;
 import com.kivi.zedman.controller.ZContactListener;
 import com.kivi.zedman.utils.MapLoader;
+import com.kivi.zedman.utils.SocketUtil;
 
+import static com.kivi.zedman.utils.Constants.FILTER_PLAYER;
+import static com.kivi.zedman.utils.Constants.FILTER_WALL;
 import static com.kivi.zedman.utils.Constants.PPM;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Kirill on 06.03.2016.
@@ -27,9 +33,14 @@ public class ZWorld {
 
     PlayerController playerController;
 
+    public Body bodyToDelete;
+    public Body bodyToChange;
+    public Bullet bulletToCreate;
+
     private Player player;
     private World world;
     private OrthogonalTiledMapRenderer tiledMapRenderer;
+    private SocketUtil socket;
 
     public float pixelSize = 0.5f;
     public long timePastLastCreate = 0;
@@ -47,7 +58,6 @@ public class ZWorld {
         return tiledMapRenderer;
     }
 
-    private OrthogonalTiledMapRenderer tiledMapRenderer;
 
 
     public ZWorld() {
@@ -58,9 +68,13 @@ public class ZWorld {
         world.setContactListener(new ZContactListener(this));
         createWorld();
 
-        player = new Player(this ,createBox(64, 80 + 320, 32, 32, false));
+//        player = new Player(this ,createBox(64, 80 + 320, 32, 32, false));
+        player = new Player(this ,createStickman(128, 320, 32, 32));
         startTime = TimeUtils.millis();
         playerController = new PlayerController(player);
+        socket = new SocketUtil(this);
+        socket.connectSocket();
+        socket.configureSocketEvent();
     }
 
     public void setPP(float x, float y) {
@@ -91,28 +105,47 @@ public class ZWorld {
         return pBody;
     }
 
-    private Body createStickman(){
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyType.DynamicBody;
-        bodyDef.angularVelocity = 10;
-        bodyDef.fixedRotation = true;
-        Body stickman = world.createBody(bodyDef);
+    public Body createStickman(int x, int y, int width, int height) {
+        Body stickman;
+        BodyDef def = new BodyDef();
+        def.type = BodyDef.BodyType.DynamicBody;
+        def.position.set(x/PPM,y/PPM);
+        def.fixedRotation = true;
+        stickman = world.createBody(def);
 
-        CircleShape circle = new CircleShape();
-        circle.setRadius(1);
+        CircleShape shape = new CircleShape();
+//        shape.setAsBox(width/PPM /2, height/PPM/2);
+        shape.setRadius(width/PPM/2);
         FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 1f;
+        fixtureDef.shape = shape;
+        fixtureDef.density = 2f;
+        fixtureDef.friction = 1f;
+        fixtureDef.filter.categoryBits = FILTER_PLAYER;
+        fixtureDef.filter.maskBits = FILTER_WALL;
 
         stickman.createFixture(fixtureDef);
-        circle.dispose();
+        shape.dispose();
         return stickman;
     }
 
 
     public void update(float delta) {
+        if (bulletToCreate != null){
+            bulletToCreate.create(this);
+            bulletToCreate = null;
+        }
+        if (bodyToDelete != null) {
+            world.destroyBody(bodyToDelete);
+            bodyToDelete = null;
+        }
+        if (bodyToChange != null){
+            bodyToChange.setType(BodyType.DynamicBody);
+            Filter filter = new Filter();
+            filter.categoryBits = 0;
+            filter.maskBits = 0;
+            bodyToChange.getFixtureList().first().setFilterData(filter);
+            bodyToChange = null;
+        }
         playerController.update(delta);
     }
 
@@ -123,5 +156,9 @@ public class ZWorld {
 
     public void dispose() {
         world.dispose();
+    }
+
+    public SocketUtil getSocket() {
+        return socket;
     }
 }

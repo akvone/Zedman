@@ -4,19 +4,21 @@ import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.physics.box2d.Body;
+import com.kivi.zedman.Player;
 
 /**
  * Created by 1 on 09.03.2016.
  */
 public class PlayerController {
-    Body player;
+    Player player;
 
     boolean jump;
     boolean runLeft;
     boolean runRight;
     boolean teleport;
+    boolean fire;
 
-    public PlayerController(Body pl){
+    public PlayerController(Player pl){
         player = pl;
     }
 
@@ -32,6 +34,7 @@ public class PlayerController {
         jump = false;
         teleport = false;
 
+
         if (Gdx.app.getType()== Application.ApplicationType.Android) {
             processTouches();
         }
@@ -39,7 +42,7 @@ public class PlayerController {
             processKeys();
         }
         if(jump) {
-            player.applyForceToCenter(0, 300, false);
+            player.getBody().applyForceToCenter(0, 300, false);
         }
         if (runLeft) {
             horizontalForce -= 1;
@@ -47,10 +50,14 @@ public class PlayerController {
         if (runRight){
             horizontalForce += 1;
         }
-        player.setLinearVelocity(horizontalForce * 5, player.getLinearVelocity().y);
+        player.getBody().setLinearVelocity(horizontalForce * 5, player.getBody().getLinearVelocity().y);
         if (teleport){
-            player.setTransform(10,10,0);
+            player.getBody().setTransform(10,10,0);
         }
+        if(fire){
+            player.createBullet();
+        }
+
     }
 
     private void processKeys () {
@@ -58,6 +65,7 @@ public class PlayerController {
         runRight = Gdx.input.isKeyPressed(Input.Keys.RIGHT);
         jump = Gdx.input.isKeyJustPressed(Input.Keys.UP);
         teleport = Gdx.input.isKeyJustPressed(Input.Keys.Y);
+        fire = Gdx.input.isKeyPressed(Input.Keys.SPACE);
     }
 
     private void processTouches () {

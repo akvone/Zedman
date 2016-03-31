@@ -3,6 +3,7 @@ package com.kivi.zedman.utils;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.kivi.zedman.Bot;
+import com.kivi.zedman.Bullet;
 import com.kivi.zedman.ZWorld;
 
 import org.json.JSONArray;
@@ -128,7 +129,25 @@ public class SocketUtil {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+        socket.on("bulletCreated", new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                JSONObject data = (JSONObject) args[0];
+                try {
+                    String id = data.getString("id");
+                    Vector2 position = new Vector2();
+                    Vector2 direction = new Vector2();
+                    position.x = ((Double) data.getDouble("x")).floatValue();
+                    position.y = ((Double) data.getDouble("y")).floatValue();
+                    direction.x = ((Double) data.getDouble("vx")).floatValue();
+                    direction.y = ((Double) data.getDouble("vy")).floatValue();
 
+                    zWorld.bulletToCreate = new Bullet(position, direction);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }

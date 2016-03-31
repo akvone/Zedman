@@ -12,7 +12,15 @@ import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.kivi.zedman.screens.GameScreen;
 import com.kivi.zedman.utils.Constants;
+import com.kivi.zedman.utils.MapLoader;
+import com.kivi.zedman.utils.SocketUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Random;
 
 import static com.kivi.zedman.utils.Constants.PPM;
 
@@ -60,9 +68,11 @@ public class Player {
         sprite.draw(batch);                                                     //player
         batch.end();
     }
-    public Body createBullet(float x, float y){
+    public Body createBullet(){
         Body bullet;
         BodyDef def = new BodyDef();
+        float x = body.getPosition().x + 0.5f;
+        float y = body.getPosition().y;
         def.type = BodyDef.BodyType.DynamicBody;
         def.position.set(x, y);
         def.bullet = true;
@@ -71,7 +81,7 @@ public class Player {
         bullet = zWorld.getWorld().createBody(def);
 
         CircleShape shape = new CircleShape();
-        shape.setRadius(1/20f);
+        shape.setRadius(1 / 20f);
 
 //        shape.setPosition(new Vector2(x, y));
         FixtureDef fixture = new FixtureDef();
@@ -79,7 +89,23 @@ public class Player {
 
 
         bullet.createFixture(fixture);
-        bullet.applyLinearImpulse(100f, 0f, bullet.getWorldCenter().x, bullet.getWorldCenter().y, true);
+        Vector2 direction = new Vector2();
+        Random random = new Random();
+        direction.y = random.nextFloat()*6;
+        direction.y -= 3;
+        direction.x = (float) Math.sqrt(3600- direction.y* direction.y);
+        bullet.applyLinearImpulse(direction, bullet.getWorldCenter(), true);
+        JSONObject data = new JSONObject();
+        try {
+            data.put("x", x);
+            data.put("y", y);
+            data.put("vx", direction.x);
+            data.put("vy", direction.y);
+
+            zWorld.getSocket().getSocket().emit("bulletCreated", data); //Отправка на сервер JSON объекта
+        } catch (JSONException e) {
+            Gdx.app.log("SocketIO", "Failed to send update to server");
+        }
         return bullet;
     }
     public void update(float dt){

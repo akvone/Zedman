@@ -9,8 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.net.Socket;
 import com.kivi.zedman.controller.MapViewerController;
 import com.kivi.zedman.utils.SocketUtil;
-import com.kivi.zedman.controller.MapViewerControllerAndroid;
-import com.kivi.zedman.controller.MapViewerControllerDesktop;
 import com.kivi.zedman.system.ActionResolver;
 import com.kivi.zedman.system.Zedman;
 import com.kivi.zedman.system.ActionResolver;
@@ -55,10 +53,7 @@ public class GameScreen extends ZedmanScreen {
 		worldRenderer = new WorldRenderer(zworld, true);
 		mapViewerController = new MapViewerController(worldRenderer.cam);
 		platformDependency();
-		mapViewerController = new MapViewerControllerDesktop(worldRenderer.cam);
-		socket = new SocketUtil(zworld);
-		socket.connectSocket();
-		socket.configureSocketEvent();
+		socket = zworld.getSocket();
 
 		Gdx.gl.glClearColor(0f, 0f, 0f, 0f); //Set clear color as black
 	}

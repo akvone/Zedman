@@ -18,10 +18,11 @@ public class Bot {
     }
 
     public Bot(ZWorld zWorld){
-        this.body = zWorld.createBox(64, 80 + 320, 32, 32, false);
+        this.body = zWorld.createStickman(128, 320, 32, 32);
     }
+
     public Bot(ZWorld zWorld, Vector2 position){
-        this.body = zWorld.createBox((int) position.x,(int) position.y, 32, 32, false);
+        this.body = zWorld.createStickman((int) position.x,(int) position.y, 32, 32);
     }
 
     public void update(float dt){

@@ -28,7 +28,8 @@ public class ZContactListener implements ContactListener {
         Fixture fb = contact.getFixtureB();
 
         if (bullet_wall(fa, fb)){
-            fa.getBody().destroyFixture(fa);
+            world.bodyToDelete = fb.getBody();
+            world.bodyToChange = fa.getBody();
         }
 
         if(fa == null || fb == null) return;
@@ -52,7 +53,7 @@ public class ZContactListener implements ContactListener {
 
     private boolean bullet_wall(Fixture fa, Fixture fb){
 
-        if(fa.getBody().isBullet() || fb.getBody().getType() == BodyDef.BodyType.StaticBody){
+        if(fa.getBody().getType() == BodyDef.BodyType.StaticBody && fb.getBody().isBullet()){
             return true;
         }
         return false;
