@@ -69,44 +69,55 @@ public class Player {
         batch.end();
     }
     public Body createBullet(){
-        Body bullet;
-        BodyDef def = new BodyDef();
+//        Body bullet;
+//        BodyDef def = new BodyDef();
+//        float x = body.getPosition().x + 0.5f;
+//        float y = body.getPosition().y;
+//        def.type = BodyDef.BodyType.DynamicBody;
+//        def.position.set(x, y);
+//        def.bullet = true;
+//        def.fixedRotation = true;
+//
+//        bullet = zWorld.getWorld().createBody(def);
+//
+//        CircleShape shape = new CircleShape();
+//        shape.setRadius(1 / 20f);
+//
+////        shape.setPosition(new Vector2(x, y));
+//        FixtureDef fixture = new FixtureDef();
+//        fixture.shape = shape;
+//
+//
+//        bullet.createFixture(fixture);
+//        Vector2 direction = new Vector2();
+//        Random random = new Random();
+//        direction.y = random.nextFloat()*6;
+//        direction.y -= 3;
+//        direction.x = (float) Math.sqrt(3600- direction.y* direction.y);
+//        bullet.applyLinearImpulse(direction, bullet.getWorldCenter(), true);
+
         float x = body.getPosition().x + 0.5f;
         float y = body.getPosition().y;
-        def.type = BodyDef.BodyType.DynamicBody;
-        def.position.set(x, y);
-        def.bullet = true;
-        def.fixedRotation = true;
-
-        bullet = zWorld.getWorld().createBody(def);
-
-        CircleShape shape = new CircleShape();
-        shape.setRadius(1 / 20f);
-
-//        shape.setPosition(new Vector2(x, y));
-        FixtureDef fixture = new FixtureDef();
-        fixture.shape = shape;
-
-
-        bullet.createFixture(fixture);
         Vector2 direction = new Vector2();
         Random random = new Random();
         direction.y = random.nextFloat()*6;
         direction.y -= 3;
+//        direction.y = 0;
         direction.x = (float) Math.sqrt(3600- direction.y* direction.y);
-        bullet.applyLinearImpulse(direction, bullet.getWorldCenter(), true);
+        Bullet bullet = new Bullet(new Vector2(x,y), direction);
+        Body bulletBody = bullet.create(zWorld);
         JSONObject data = new JSONObject();
         try {
             data.put("x", x);
             data.put("y", y);
             data.put("vx", direction.x);
             data.put("vy", direction.y);
-
+            Gdx.app.log("Bullet", "Pos: " + x + " : " + y + "; Dir: " + direction.x + " : " + direction.y );
             zWorld.getSocket().getSocket().emit("bulletCreated", data); //Отправка на сервер JSON объекта
         } catch (JSONException e) {
             Gdx.app.log("SocketIO", "Failed to send update to server");
         }
-        return bullet;
+        return bulletBody;
     }
     public void update(float dt){
 

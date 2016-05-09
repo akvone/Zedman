@@ -59,9 +59,10 @@ public class GameScreen extends ZedmanScreen {
 	}
 
 	public void updateServer(float dt){  //Посылает на сервер координаты игрока при его перемещении
-		timer += dt;
+		timer = 100;
+//		timer += dt;
 		if ( timer >= UPDATE_TIME && zworld.getPlayer() != null && zworld.getPlayer().hasMoved()){
-			timer = 0;
+//			timer = 0;
 			JSONObject data = new JSONObject();
 			try {
 				data.put("x", zworld.getPlayer().getPosition().x);

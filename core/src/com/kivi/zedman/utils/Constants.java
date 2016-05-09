@@ -6,8 +6,10 @@ package com.kivi.zedman.utils;
  */
 public class Constants {
     public static final float PPM = 32; //Point Per Meter - converting from Box2d to render coordinates
+    public static final float MINI_SIDE = 32; //Point Per Meter - converting from Box2d to render coordinates
     public static final float MICRO_SIDE = 4; //Point Per Meter - converting from Box2d to render coordinates
-    public static final float MICRO_SIDE_BOX = MICRO_SIDE/PPM; //Point Per Meter - converting from Box2d to render coordinates
+    public static final float MINI_SIDE_BOX = MINI_SIDE /PPM; //Point Per Meter - converting from Box2d to render coordinates
+    public static final float MICRO_SIDE_BOX = MICRO_SIDE /PPM; //Point Per Meter - converting from Box2d to render coordinates
     public static float CAMERA_WIDTH = 128f;
     public static float CAMERA_HEIGHT = 72f;
 

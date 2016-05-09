@@ -5,14 +5,13 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Manifold;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.kivi.zedman.ZWorld;
 
 /**
- * Created by Kirill on 06.03.2016.
+ * Created by Kirill on 06.03.2016
  */
 public class ZContactListener implements ContactListener {
 
@@ -29,11 +28,12 @@ public class ZContactListener implements ContactListener {
 
         if (bullet_wall(fa, fb)){
             world.bodyToDelete = fb.getBody();
-            world.bodyToChange = fa.getBody();
+            if (!world.wallsToSplit.contains(fa))
+            world.wallsToSplit.add(fa);
         }
 
-        if(fa == null || fb == null) return;
-        ZWorld.currentTime = TimeUtils.millis() - ZWorld.startTime;
+//        if(fa == null || fb == null) return;
+//        ZWorld.currentTime = TimeUtils.millis() - ZWorld.startTime;
     }
 
     @Override
@@ -52,10 +52,6 @@ public class ZContactListener implements ContactListener {
     }
 
     private boolean bullet_wall(Fixture fa, Fixture fb){
-
-        if(fa.getBody().getType() == BodyDef.BodyType.StaticBody && fb.getBody().isBullet()){
-            return true;
-        }
-        return false;
+        return fa.getBody().getType() == BodyDef.BodyType.StaticBody && fb.getBody().isBullet();
     }
 }
